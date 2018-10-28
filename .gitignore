@@ -115,5 +115,5 @@ dmypy.json
 
 #flask related db
 migrations/
-migrations/versions
+migrations/versions/*.py
 app.db
