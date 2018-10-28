@@ -117,3 +117,4 @@ dmypy.json
 migrations/
 migrations/versions/*.py
 app.db
+.idea/workspace.xml
