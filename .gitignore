@@ -114,5 +114,5 @@ dmypy.json
 .pyre/
 
 #flask related db
-migrations/*
+migrations/
 app.db
