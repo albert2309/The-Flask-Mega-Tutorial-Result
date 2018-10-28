@@ -69,7 +69,6 @@ def user(username):
     return render_template('user.html', user=user, posts=posts)
 
 'https://www.gravatar.com/avatar/' + md5(b'albert.jonathan23@gmail.com').hexdigest()
-=======
         {'author': user, 'body': 'Test post #1'},
         {'author': user, 'body': 'Test post #2'}
     ]

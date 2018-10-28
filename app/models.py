@@ -3,9 +3,6 @@ from datetime import datetime
 from hashlib import md5
 from app import db, login
 from flask_login import UserMixin
-<<<<<<< HEAD
-
-from hashlib import md5
 =======
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -14,7 +11,6 @@ followers = db.Table('followers',
                      db.Column('followed_id',db.Integer,db.ForeignKey('user.id'))
                      )
 
->>>>>>> a02ee84bf11a846664a032fe284e67cef50dcc7f
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
