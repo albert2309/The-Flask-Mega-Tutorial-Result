@@ -1,17 +1,15 @@
-{% extends 'bootstrap/base.html' %}
 
-{% block title %}
-    {% if title %}{{ title }} - Microblog{% else %}Welcome to Microblog{% endif %}
-{% endblock %}
-
-{% block scripts %}
-    {{ super() }}
-    {{ moment.include_moment() }}
-{% endblock %}
-
-{% block navbar %}
-    <nav class="navbar navbar-default">
-        Microblog:
+<html>
+    <head>
+        {% if title %}
+        <title>{{ title }} - Microblog</title>
+        {% else %}
+        <title>Welcome to Microblog</title>
+        {% endif %}
+    </head>
+    <body>
+        <div>
+            Microblog:
             <a href="{{ url_for('index') }}">Home</a>
              <a>|</a>
             {% if current_user.is_anonymous %}
@@ -23,20 +21,17 @@
             {% endif %}
             <a>|</a>
             <a href="{{ url_for('explore') }}">Explore</a>
-    </nav>
-{% endblock %}
-
-{% block content %}
-    <div class="container">
+        </div>
+        <hr>
         {% with messages = get_flashed_messages() %}
         {% if messages %}
+        <ul>
             {% for message in messages %}
-            <div class="alert alert-info" role="alert">{{ message }}</div>
+            <li>{{ message }}</li>
             {% endfor %}
+        </ul>
         {% endif %}
         {% endwith %}
-
-        {# application content needs to be provided in the app_content block #}
-        {% block app_content %}{% endblock %}
-    </div>
-{% endblock %}
+        {% block content %}{% endblock %}
+    </body>
+</html>
