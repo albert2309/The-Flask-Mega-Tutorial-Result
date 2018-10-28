@@ -119,3 +119,4 @@ migrations/versions/*.py
 app.db
 .idea/workspace.xml
 *.db
+app.db
