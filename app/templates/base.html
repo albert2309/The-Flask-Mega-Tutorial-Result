@@ -38,7 +38,7 @@
         {#            }#}
         {#        }#}
         {#    )#}
-        {#});#}
+        {# });#}
 
         $(function(){
             var timer = null;
@@ -90,24 +90,90 @@
                }
             )
         });
+        function set_message_count(n) {
+            $('#message_count').text(n);
+            $('#message_count').css('visibility', n ? 'visible' : 'hidden');
+        }
 
+
+    {#register a function to execute after the page loads    #}
+    {% if current_user.is_authenticated %}
+        $(function() {
+            var since = 0;
+            setInterval(function() {
+                $.ajax('{{ url_for('main.notifications') }}?since=' + since).done(
+                    function(notifications) {
+                        for (var i = 0; i < notifications.length; i++) {
+                            if (notifications[i].name == 'unread_message_count')
+                                set_message_count(notifications[i].data);
+                            since = notifications[i].timestamp;
+                        }
+                    }
+                );
+            }, 10000);
+        });
+        {% endif %}
     </script>
 {% endblock %}
 
 {% block navbar %}
+{#    old ways #}
+{#    <nav class="navbar navbar-default">#}
+{#        Microblog:#}
+{#            <a href="{{ url_for('main.index') }}">Home</a>#}
+{#             <a>|</a>#}
+{#            {% if current_user.is_anonymous %}#}
+{#            <a href="{{ url_for('auth.login') }}">Login</a>#}
+{#            {% else %}#}
+{#            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>#}
+{#            <a>|</a>#}
+{#            <a href="{{ url_for('main.messages') }}">Messages</a>#}
+{#            <a>|</a>#}
+{#            <a href="{{ url_for('auth.logout') }}">Logout</a>#}
+{#            {% endif %}#}
+{#            <a>|</a>#}
+{#            <a href="{{ url_for('main.explore') }}">Explore</a>#}
+{#    </nav>#}
     <nav class="navbar navbar-default">
-        Microblog:
-            <a href="{{ url_for('main.index') }}">Home</a>
-             <a>|</a>
-            {% if current_user.is_anonymous %}
-            <a href="{{ url_for('auth.login') }}">Login</a>
-            {% else %}
-            <a href="{{ url_for('main.user', username=current_user.username) }}">Profile</a>
-             <a>|</a>
-            <a href="{{ url_for('auth.logout') }}">Logout</a>
-            {% endif %}
-            <a>|</a>
-            <a href="{{ url_for('main.explore') }}">Explore</a>
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('main.index') }}">Microblog</a>
+            </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('main.index') }}">{{ _('Home') }}</a></li>
+                    <li><a href="{{ url_for('main.explore') }}">{{ _('Explore') }}</a></li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_anonymous %}
+                    <li><a href="{{ url_for('auth.login') }}"> {{ _('login') }}</a></li>
+                    {% else %}
+                    <li>
+                       <a href="{{ url_for('main.messages') }}">
+                            {{ _('Messages') }}
+                            {% set new_messages = current_user.new_messages() %}
+                            <span id="message_count" class="badge"
+                                  style="visibility: {% if new_messages %}visible
+                                                     {% else %}hidden {% endif %};">
+                                {{ new_messages }}
+                            </span>
+                        </a>
+                    </li>
+                    <li><a href="{{ url_for('main.user',username=current_user.username) }}">
+                        {{ _('Profile') }}
+                    </a></li>
+                    <li><a href="{{ url_for('auth.logout') }}">{{ _('Logout') }}</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
     </nav>
 {% endblock %}
 
